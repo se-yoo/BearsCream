@@ -1,0 +1,19 @@
+package BearsCream171025ver;
+
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+
+public class KeyListener extends KeyAdapter{
+	public void keyPressed(KeyEvent e){
+		
+		if(BearsCream.game==null){//게임 실행중이 아니라면
+			return;
+		}		
+		if(e.getKeyCode()==KeyEvent.VK_LEFT){
+			BearsCream.game.pressLeft();
+		}
+		else if(e.getKeyCode()==KeyEvent.VK_RIGHT){
+			BearsCream.game.pressRight();
+		}		
+	}
+}
