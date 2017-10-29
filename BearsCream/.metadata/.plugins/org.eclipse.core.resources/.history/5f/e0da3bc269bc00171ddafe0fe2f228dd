@@ -1,0 +1,21 @@
+package bearsCream;
+
+import java.awt.Graphics;
+import java.awt.Image;
+
+import javax.swing.ImageIcon;
+
+public class Bear {
+	public Image bear = new ImageIcon(this.getClass().getResource("/result_Bear_normal.png")).getImage();
+	
+	public int look=0;
+	
+	public void iceCreamDraw(Graphics g){
+		if(look==0){
+			bear = new ImageIcon(this.getClass().getResource("/result_Bear_normal.png")).getImage();
+		}else if(look==1){
+			bear = new ImageIcon(this.getClass().getResource("/result_Bear_happy.png")).getImage();
+		}
+		g.drawImage(bear,604,400,291,240,null);
+	}
+}

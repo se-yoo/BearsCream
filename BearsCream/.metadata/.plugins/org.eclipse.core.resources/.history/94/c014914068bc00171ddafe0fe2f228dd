@@ -1,0 +1,14 @@
+package bearsCream;
+
+import java.awt.Graphics;
+import java.awt.Image;
+
+import javax.swing.ImageIcon;
+
+public class Bear {
+	public Image bear = new ImageIcon(this.getClass().getResource("/result_Bear_normal.png")).getImage();
+	
+	public void iceCreamDraw(Graphics g){
+		g.drawImage(icecreamimg,x1,y1,size,(size/5)*4,null);
+	}
+}

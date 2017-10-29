@@ -7,7 +7,7 @@ import javax.swing.ImageIcon;
 
 public class IceCream extends Thread{
 
-	int i_random=(int)(Math.random()*15)+1; //아이스크림 이미지 랜덤
+	int i_random=(int)(Math.random()*25)+1; //아이스크림 이미지 랜덤
 	
 	Image icecreamimg=new ImageIcon(this.getClass().getResource("/icecream"+i_random+".png")).getImage();
 	
@@ -21,22 +21,27 @@ public class IceCream extends Thread{
 	private boolean proceeded=true; //아이스크림의 진행여부
 	private boolean i_catch=false; //받았는지 못받았는지
 	
-	public void setX(int x1) {
-		this.x1 = x1;
-	}
-	
-	public void setY(int y2) {
-		this.y2 = y2;
+	public IceCream(int size, int speed){
+		this.size=size;
+		this.speed=speed;
+		x1=(int)(Math.random()*880)+20;
+		x2=x1+size;
+		y1=0;
 	}
 
 	public boolean isProceeded(){
 		return proceeded;
 	}
 	
+	public boolean geti_catch(){
+		return i_catch;
+	}
+	
 	public boolean isCatch(int y1,int x1,int x2){
 		int okay=this.size/2;
 		if((this.y2<=y1&&this.y2>=(y1-10))){ // 확인 문장 쓰기
 			if((this.x2-x1)>=okay&&(x2-this.x1)>=okay){ //아이스크림을 이전꺼보다 오른쪽으로 받았을때
+				x_distance=this.x1-x1;
 				i_catch=true;
 			}
 //			i_catch=true;
@@ -46,13 +51,6 @@ public class IceCream extends Thread{
 	
 	public void close(){
 		proceeded=false;
-	}
-	
-	public IceCream(int size, int speed){
-		this.size=size;
-		this.speed=speed;
-		x1=(int)(Math.random()*880)+20;
-		x2=x1+size;
 	}
 	
 	public void iceCreamDraw(Graphics g){
