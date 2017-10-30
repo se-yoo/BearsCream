@@ -19,7 +19,7 @@ public class Game extends Thread{
 	
 	public static Cornet c=new Cornet(430,660);
 	private int size=100;
-	private int speed=150;
+	private int speed=130;
 	
 	private int before_x1,before_x2,before_y1;
 	
@@ -40,7 +40,7 @@ public class Game extends Thread{
 			if(i==0){
 				before_y1=c.y;
 				before_x1=c.x;
-				before_x2=c.x+139;
+				before_x2=c.x+92;
 			}else{
 				before_y1=iList.get(i-1).y1;
 				before_x1=iList.get(i-1).x1;
@@ -101,7 +101,7 @@ public class Game extends Thread{
 	}
 	public void run(){
 		try {
-			while(flag){
+			while(flag){				
 				for(int i=0;i<5;i++){
 					icc=new IceCream(size,speed);
 					iList.add(icc);
@@ -109,20 +109,20 @@ public class Game extends Thread{
 					icc.start();
 					Thread.sleep(speed*20);//1개 만들고 쉬기
 				}
-				if(b.look==-2){
+				if(b.look<=-2){
 					flag=false;
 					break;
 				}
 				Thread.sleep(speed*25);//5개 만들고 쉬기
 				judgment=null;
 				size=100;
-				speed-=5;
+				speed-=3;
 			}
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
+		
 		if(score/10==0){
 			resultBear = new ImageIcon(this.getClass().getResource("/result_Bear_sad.png")).getImage();
 		}
@@ -132,5 +132,9 @@ public class Game extends Thread{
 			resultBear = new ImageIcon(this.getClass().getResource("/result_Bear_happy.png")).getImage();
 			r.inputName();
 		}
+	}
+	
+	public void interruptThread(){
+		interrupt();
 	}
 }

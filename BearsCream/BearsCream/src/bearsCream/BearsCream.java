@@ -32,12 +32,16 @@ public class BearsCream extends JFrame {
 	private ImageIcon rankButtonEnteredImg = new ImageIcon(this.getClass().getResource("/rankButtonEntered.png"));
 	private ImageIcon rankButtonBasicImg = new ImageIcon(this.getClass().getResource("/rankButtonBasic.png"));
 	private ImageIcon backButtonImg = new ImageIcon(this.getClass().getResource("/back.png"));
+	private ImageIcon pauseButtonImg = new ImageIcon(this.getClass().getResource("/pause.png"));
+	private ImageIcon restartButtonImg = new ImageIcon(this.getClass().getResource("/restart.png"));
 
 	// 버튼
     private JButton startButton = new JButton(startButtonBasicImg);
 	private JButton explanationButton = new JButton(explanationButtonBasicImg);
 	private JButton rankButton = new JButton(rankButtonBasicImg);
 	private JButton backButton=new JButton(backButtonImg);
+	private JButton pauseButton = new JButton(pauseButtonImg);
+	private JButton restartButton=new JButton(restartButtonImg);
 	
 	//음악
 	Music music=new Music("introBackgroundMusic.mp3",true);
@@ -56,17 +60,19 @@ public class BearsCream extends JFrame {
 	           public void paintComponent(Graphics g) {
 	        	   if(nowScreen==2&&!game.isAlive()){
 	        		   nowScreen=4;
-	        		   backButton.setIcon(new ImageIcon(this.getClass().getResource("/home.png")));
 	        		   bgimg=new ImageIcon(this.getClass().getResource("/result_Background.jpg")).getImage();
 	        	   }
 	               g.drawImage(bgimg, 0, 0, null);
 	               if(nowScreen==2)
 	            	   game.screenDraw(g);
 	               else if(nowScreen==4){
+	   				   backButton.setBounds(20,20,72,72);
+	            	   pauseButton.setVisible(false);
+	            	   backButton.setVisible(true);
 	        		   g.setColor(Color.white);
 	        		   g.setFont(new Font("Arial",Font.BOLD,100));
 	        		   g.drawString(String.valueOf(game.score), 470, 300);
-	        		   g.drawImage(game.resultBear,306,400,388,319,null);
+	        		   g.drawImage(game.resultBear,306,380,388,319,null);
 	               }
 	               setOpaque(false); //그림을 표시하게 설정,투명하게 조절
 	               super.paintComponent(g);
@@ -137,12 +143,14 @@ public class BearsCream extends JFrame {
 				explanationButton.setVisible(false);
 				rankButton.setVisible(false);
 				bgimg = new ImageIcon(this.getClass().getResource("/game_Background.jpg")).getImage();
+				backButton.setIcon(new ImageIcon(this.getClass().getResource("/home.png")));
 				game=new Game();
 				music.close();
 				music=new Music("gameBackgroundMusic.mp3",true);
 				music.start();
-				backButton.setVisible(true);
+				pauseButton.setVisible(true);
 				nowScreen=2;
+				game.score=0;
 				game.start();
 			}
 		});
@@ -202,12 +210,57 @@ public class BearsCream extends JFrame {
 			}
 		});
 	     
+	     pauseButton.setBounds(20,20,72,72);
+	     pauseButton.setBorderPainted(false); // 버튼 테두리 없애기
+	     pauseButton.setContentAreaFilled(false);// 버튼 배경없애기
+	     pauseButton.setFocusPainted(false); // 버튼 안에 이미지 테두리 없애기
+	     background.add(pauseButton);
+	     pauseButton.setVisible(false);
+	     scrollPane = new JScrollPane(background);
+	     setContentPane(scrollPane);
+	     pauseButton.addMouseListener(new MouseAdapter() {
+			// 버튼을 눌렀을 때
+			public void mousePressed(MouseEvent e) {
+				game.suspend();
+				for(int i=0;i<game.iList.size();i++){
+					game.iList.get(i).suspend();
+				}
+				backButton.setBounds(408,324,72,72);
+				backButton.setVisible(true);
+				restartButton.setVisible(true);
+				pauseButton.setVisible(false);
+			}
+		});
+		 
+	     restartButton.setBounds(500,324,72,72);
+	     restartButton.setBorderPainted(false); // 버튼 테두리 없애기
+	     restartButton.setContentAreaFilled(false);// 버튼 배경없애기
+	     restartButton.setFocusPainted(false); // 버튼 안에 이미지 테두리 없애기
+	     background.add(restartButton);
+	     restartButton.setVisible(false);
+	     scrollPane = new JScrollPane(background);
+	     setContentPane(scrollPane);
+	     restartButton.addMouseListener(new MouseAdapter() {
+			// 버튼을 눌렀을 때
+			public void mousePressed(MouseEvent e) {
+				game.resume();
+				for(int i=0;i<game.iList.size();i++){
+					game.iList.get(i).resume();
+				}
+				backButton.setVisible(false);
+				restartButton.setVisible(false);
+				pauseButton.setVisible(true);
+			}
+		});
+	     
 	}
 	
 	public void backMain(){
+		backButton.setBounds(20,20,72,72);
 		startButton.setVisible(true);
 		explanationButton.setVisible(true);
 		rankButton.setVisible(true);
+		restartButton.setVisible(false);
 		bgimg = new ImageIcon(this.getClass().getResource("/intro_Background.jpg")).getImage();
 		backButton.setIcon(backButtonImg);
 		backButton.setVisible(false);
@@ -215,7 +268,7 @@ public class BearsCream extends JFrame {
 			music.close();
 			music=new Music("introBackgroundMusic.mp3",true);
 			music.start();
-			game.stop();
+			game.interruptThread();
 		}
 		if(nowScreen==3){
 			for(int i=0;i<10;i++){

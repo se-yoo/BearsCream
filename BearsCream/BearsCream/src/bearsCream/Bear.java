@@ -12,6 +12,7 @@ public class Bear {
 	
 	public void BearDraw(Graphics g){
 		if(look>=1) look=1;
+		else if(look<=-2) look=-2;
 		if(look==0){
 			bear = new ImageIcon(this.getClass().getResource("/play_Bear_normal.png")).getImage();
 		}else if(look==1){
