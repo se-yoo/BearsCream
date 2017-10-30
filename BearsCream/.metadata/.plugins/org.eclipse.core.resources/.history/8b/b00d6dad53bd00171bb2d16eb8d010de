@@ -1,0 +1,94 @@
+package bearsCream;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.StringTokenizer;
+
+public class Result {
+
+	ArrayList<RankPlayer> rank = new ArrayList<RankPlayer>(10); 
+	int index=0;
+	int playerscore=0;
+	String playername=null;
+	
+	public Result(int ps){
+		this.playerscore=ps;
+	}
+	
+	public void readFile(){
+		String name;
+		int score;
+		try {
+			String csvStr="";
+			String tmpStr="";
+			FileReader fr=new FileReader(new File("score.txt"));
+			BufferedReader br=new BufferedReader(fr);
+			do{
+				tmpStr=br.readLine();
+				if(tmpStr!=null){
+					csvStr+=tmpStr+"\t";
+				}
+			}while(tmpStr!=null);
+			
+			StringTokenizer parse=new StringTokenizer(csvStr,"\t");
+			for(int i=0;i<10;i++){
+				name=parse.nextToken();
+				score=Integer.valueOf(parse.nextToken());
+				rank.add(new RankPlayer(name,score));
+			}
+		}catch(FileNotFoundException e){
+			System.out.println("잘못된 파일 이름");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public boolean compareRank(){
+		for(int i=0;i<10;i++){
+			if(rank.get(i).score<playerscore){
+				index=i;
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public void inputName(){
+		
+	}
+	
+	public void insertInfo(){
+		for(int i=9;i>index;i--){
+			rank.get(i).name=rank.get(i-1).name;
+			rank.get(i).score=rank.get(i-1).score;
+		}
+		rank.get(index).name=playername;
+		rank.get(index).score=playerscore;
+	}
+	
+	public void writeFile(){
+		FileWriter fw=null;
+		BufferedWriter bw=null;
+		try{
+			fw=new FileWriter(new File(fname));
+			bw=new BufferedWriter(fw);
+			
+			for(int j=0;j<students.size();j++){
+				bw.write(students.get(j).major+"\t"+students.get(j).hakbun+"\t"+students.get(j).name
+					+"\t"+students.get(j).ko+"\t"+students.get(j).ma+"\t"+students.get(j).ja+
+					"\t"+students.get(j).cpp+"\t"+students.get(j).sum+"\t"+students.get(j).avg+
+					"\t"+students.get(j).rank);
+				bw.newLine();
+			}
+			bw.close();
+			fw.close();
+		}catch(FileNotFoundException e){
+			System.out.println("잘못된 파일 이름");
+		}
+	}
+
+}

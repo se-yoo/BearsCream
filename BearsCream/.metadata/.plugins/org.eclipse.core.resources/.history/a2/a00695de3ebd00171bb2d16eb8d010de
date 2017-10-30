@@ -1,0 +1,10 @@
+package bearsCream;
+
+public class RankPlayer {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+	}
+
+}

@@ -1,5 +1,6 @@
 package bearsCream;
 
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -9,6 +10,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -40,7 +42,7 @@ public class BearsCream extends JFrame {
 	//음악
 	Music music=new Music("introBackgroundMusic.mp3",true);
 	
-	int nowScreen=0; // 0은 메인 1은 설명 2는 게임 시작 3은 랭킹
+	int nowScreen=0; // 0은 메인 1은 설명 2는 게임 시작 3은 랭킹 4는 게임오버
 	
 	public static Game game;
 	
@@ -52,9 +54,19 @@ public class BearsCream extends JFrame {
 		
 		JPanel background = new JPanel() {
 	           public void paintComponent(Graphics g) {
+	        	   if(nowScreen==2&&!game.isAlive()){
+	        		   nowScreen=4;
+	        		   backButton.setIcon(new ImageIcon(this.getClass().getResource("/home.png")));
+	        		   bgimg=new ImageIcon(this.getClass().getResource("/result_Background.jpg")).getImage();
+	        	   }
 	               g.drawImage(bgimg, 0, 0, null);
-	               if(nowScreen==2){
+	               if(nowScreen==2)
 	            	   game.screenDraw(g);
+	               else if(nowScreen==4){
+	        		   g.setColor(Color.white);
+	        		   g.setFont(new Font("Arial",Font.BOLD,100));
+	        		   g.drawString(String.valueOf(game.score), 470, 300);
+	        		   g.drawImage(game.resultBear,306,400,388,319,null);
 	               }
 	               setOpaque(false); //그림을 표시하게 설정,투명하게 조절
 	               super.paintComponent(g);
@@ -197,9 +209,9 @@ public class BearsCream extends JFrame {
 		explanationButton.setVisible(true);
 		rankButton.setVisible(true);
 		bgimg = new ImageIcon(this.getClass().getResource("/intro_Background.jpg")).getImage();
+		backButton.setIcon(backButtonImg);
 		backButton.setVisible(false);
-		if(nowScreen==2){
-			nowScreen=0;
+		if(nowScreen==2||nowScreen==4){
 			music.close();
 			music=new Music("introBackgroundMusic.mp3",true);
 			music.start();
@@ -210,6 +222,7 @@ public class BearsCream extends JFrame {
 				scoreList.get(i).setVisible(false);
 			}
 		}
+		nowScreen=0;
 	}
 	
 	public void rankRead(){

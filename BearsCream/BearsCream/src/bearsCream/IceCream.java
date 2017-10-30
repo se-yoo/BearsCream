@@ -72,7 +72,7 @@ public class IceCream extends Thread{
 				if(proceeded){
 					Thread.sleep(speed);
 				}else{
-					interrupt();
+					//interrupt();
 					break;
 				}
 			}

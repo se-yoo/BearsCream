@@ -1,0 +1,6 @@
+package bearsCream;
+
+public class RankPlayer{
+	public String name;
+	public int score;
+}

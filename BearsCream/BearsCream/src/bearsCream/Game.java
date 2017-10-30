@@ -12,6 +12,7 @@ import javax.swing.ImageIcon;
 public class Game extends Thread{
 	public Image judgment = null;
 	ArrayList<IceCream> iList=new ArrayList<IceCream>(5);
+	public Image resultBear = new ImageIcon(this.getClass().getResource("/result_Bear_normal.png")).getImage();
 
 	IceCream icc;
 	Bear b=new Bear();
@@ -24,14 +25,16 @@ public class Game extends Thread{
 	
 	private int i_cnt=0;
 	
-	private int score=0;
+	public static int score=0;
+	private boolean flag=true;
 	
 	public Game(){
+		c.x=430;
 	}
 	
 	public void screenDraw(Graphics g){
 		b.BearDraw(g);
-		g.drawImage(judgment, 400, 300, 200, 62,null);
+		g.drawImage(judgment, 323, 250, 354, 118,null);
 		for(int i=0;i<iList.size();i++){
 			IceCream ic=iList.get(i);
 			if(i==0){
@@ -75,6 +78,8 @@ public class Game extends Thread{
 				if(ic.y2>before_y1&&iList.size()==5){
 					b.look--;
 					judgment=new ImageIcon(this.getClass().getResource("/miss.png")).getImage();
+					if(b.look==-2)
+						judgment=new ImageIcon(this.getClass().getResource("/gameover.png")).getImage();//게임오버
 					for(int j=0;j<5;j++){
 						iList.remove(0);
 					}
@@ -96,7 +101,7 @@ public class Game extends Thread{
 	}
 	public void run(){
 		try {
-			while(true){
+			while(flag){
 				for(int i=0;i<5;i++){
 					icc=new IceCream(size,speed);
 					iList.add(icc);
@@ -104,18 +109,28 @@ public class Game extends Thread{
 					icc.start();
 					Thread.sleep(speed*20);//1개 만들고 쉬기
 				}
+				if(b.look==-2){
+					flag=false;
+					break;
+				}
 				Thread.sleep(speed*25);//5개 만들고 쉬기
 				judgment=null;
 				size=100;
 				speed-=5;
-				if(b.look==-2){
-					interrupt();
-					break;
-				}
 			}
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+
+		if(score/10==0){
+			resultBear = new ImageIcon(this.getClass().getResource("/result_Bear_sad.png")).getImage();
+		}
+		Result r=new Result(score);
+		r.readFile();
+		if(r.compareRank()){
+			resultBear = new ImageIcon(this.getClass().getResource("/result_Bear_happy.png")).getImage();
+			r.inputName();
 		}
 	}
 }
